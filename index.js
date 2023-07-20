@@ -1,12 +1,12 @@
-require('dotenv').config();
-const express = require('express');
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+require("dotenv").config();
+const express = require("express");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 5000;
 const jwt = require("jsonwebtoken");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
-const cors = require('cors');
+const cors = require("cors");
 
 app.use(cors());
 app.use(express.json());
@@ -18,60 +18,59 @@ const client = new MongoClient(uri, {
   serverApi: ServerApiVersion.v1,
 });
 
-
 const run = async () => {
   try {
-    const db = client.db('book-catelog');
-    const bookCollection = db.collection('book');
+    const db = client.db("book-catelog");
+    const bookCollection = db.collection("book");
     const usersCollection = db.collection("user");
-    
 
-    app.get('/books', async (req, res) => {
-     const { search, genre, publicationYear } = req.query;
-     // Prepare the filter conditions
-     const filter = {};
+    app.get("/books", async (req, res) => {
+      const { search, genre, publicationYear } = req.query;
+      // Prepare the filter conditions
+      const filter = {};
 
-     if (search) {
-       // Use search for title, author name, and genre
-       filter.$or = [
-         { title: { $regex: search, $options: "i" } },
-         { author: { $regex: search, $options: "i" } },
-         { genre: { $regex: search, $options: "i" } },
-       ];
-     }
+      if (search) {
+        // Use search for title, author name, and genre
+        filter.$or = [
+          { title: { $regex: search, $options: "i" } },
+          { author: { $regex: search, $options: "i" } },
+          { genre: { $regex: search, $options: "i" } },
+        ];
+      }
 
-     if (genre) {
-       // Filter by genre
-       filter.genre = genre;
-     }
+      if (genre) {
+        // Filter by genre
+        filter.genre = genre;
+      }
 
-     if (publicationYear) {
-       filter.publicationDate = {
-         $regex: `^${publicationYear}-`,
-         $options: "i",
-       };
-     }
-     const books = await bookCollection.find(filter).toArray();
-     return res.status(200).send({
-      message: "Books retrieved successfully!",
-      data: books,
+      if (publicationYear) {
+        filter.publicationDate = {
+          $regex: `^${publicationYear}-`,
+          $options: "i",
+        };
+      }
+      const books = await bookCollection.find(filter).toArray();
+      return res.status(200).send({
+        message: "Books retrieved successfully!",
+        data: books,
+      });
     });
-    });
 
-    app.get("/books/recent-published", async (req, res) => {
+    app.get("/book/recent-published", async (req, res) => {
       const sort = { publishedDate: -1 };
-      const result = await booksCollection
+      const result = await bookCollection
         .find({})
         .sort(sort)
         .limit(10)
         .toArray();
+        
       return res.status(200).send({
         message: "Recent Published Books retrieved successfully!",
-        books: result,
+        book: result,
       });
     });
 
-    app.post('/book', async (req, res) => {
+    app.post("/book", async (req, res) => {
       const authorizeToken = req.headers.authorization;
       if (!authorizeToken) {
         return res.status(400).send({
@@ -100,7 +99,7 @@ const run = async () => {
       }
     });
 
-    app.get('/book/:id', async (req, res) => {
+    app.get("/book/:id", async (req, res) => {
       const id = req.params.id;
 
       const book = await bookCollection.findOne({ _id: ObjectId(id) });
@@ -117,7 +116,7 @@ const run = async () => {
       }
     });
 
- app.put("/book/:id", async (req, res) => {
+    app.put("/book/:id", async (req, res) => {
       const authorizeToken = req.headers.authorization;
       if (!authorizeToken) {
         return res.status(400).send({
@@ -132,7 +131,6 @@ const run = async () => {
         } else {
           const bookId = req.params.id;
           const updatedBookData = req.body;
-
           // Remove the _id field from the updatedBookData object
           delete updatedBookData._id;
 
@@ -155,7 +153,7 @@ const run = async () => {
       }
     });
 
-    app.delete('/book/:id', async (req, res) => {
+    app.delete("/book/:id", async (req, res) => {
       const authorizeToken = req.headers.authorization;
       if (!authorizeToken) {
         return res.status(400).send({
@@ -187,28 +185,42 @@ const run = async () => {
       }
     });
 
-   
+    app.post("/comment/:id", async (req, res) => {
+      const authorizeToken = req.headers.authorization;
+      if (!authorizeToken) {
+        return res.status(400).send({
+          message: "Authorization not provided",
+        });
+      } else {
+        const verifiedUser = await jwt.verify(authorizeToken, "tokenSecret");
+        if (!verifiedUser) {
+          return res.status(400).send({
+            message: "You are not authorized",
+          });
+        } else {
+          const bookId = req.params.id;
+          const bodyData = req.body;
+          const filter = { _id: new ObjectId(bookId) };
+          const update = {
+            $push: { customerReviews: bodyData },
+          };
 
-    app.post('/comment/:id', async (req, res) => {
-      const bookId = req.params.id;
-      const comment = req.body.comment;
+          const result = await bookCollection.updateOne(filter, update);
 
-
-      const result = await bookCollection.updateOne(
-        { _id: ObjectId(bookId) },
-        { $push: { comments: comment } }
-      );
-
-      if (result.modifiedCount !== 1) {
-        console.error('book not found or comment not added');
-        res.json({ error: 'book not found or comment not added' });
-        return;
+          if (result.modifiedCount > 0) {
+            return res.status(200).send({
+              message: "Review added successfully!",
+            });
+          } else {
+            return res.status(400).send({
+              message: "Review adding failed!",
+            });
+          }
+        }
       }
-
-      res.json({ message: 'Comment added successfully' });
     });
 
-    app.get('/comment/:id', async (req, res) => {
+    app.get("/comment/:id", async (req, res) => {
       const bookId = req.params.id;
 
       const result = await bookCollection.findOne(
@@ -219,11 +231,11 @@ const run = async () => {
       if (result) {
         res.json(result);
       } else {
-        res.status(404).json({ error: 'book not found' });
+        res.status(404).json({ error: "book not found" });
       }
     });
 
-   // Authentication APIs Start
+    // Authentication APIs Start
     app.post("/auth/signup", async (req, res) => {
       const userData = req.body;
       // find user is exist or not
@@ -235,7 +247,7 @@ const run = async () => {
           message: "This email already exist!",
         });
       } else {
-         const hashedPassword = await bcrypt.hash(userData.password, 12);
+        const hashedPassword = await bcrypt.hash(userData.password, 12);
         userData.password = hashedPassword;
         const result = await usersCollection.insertOne(userData);
         if (result.acknowledged == true) {
@@ -282,8 +294,7 @@ const run = async () => {
       }
     });
 
-
-    app.get('/user/:email', async (req, res) => {
+    app.get("/user/:email", async (req, res) => {
       const email = req.params.email;
 
       const result = await userCollection.findOne({ email });
@@ -300,8 +311,8 @@ const run = async () => {
 
 run().catch((err) => console.log(err));
 
-app.get('/', (req, res) => {
-  res.send('Hello Book Catelogo!');
+app.get("/", (req, res) => {
+  res.send("Hello Book Catelogo!");
 });
 
 app.listen(port, () => {
