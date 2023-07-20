@@ -4,7 +4,7 @@
     "author": "F. Scott Fitzgerald",
     "genre": "Classic",
     "price": 44,
-    "publicationDate": "1925-04-10",
+    "publicationDate": "2011-04-10",
     "reviews": [
       { "rating": 5, "comment": "A timeless classic!" },
       { "rating": 4, "comment": "Beautifully written." }
@@ -16,7 +16,7 @@
     "author": "Harper Lee",
     "genre": "Fiction",
     "price": 24,
-    "publicationDate": "1960-07-11",
+    "publicationDate": "2012-07-11",
     "reviews": [
       { "rating": 5, "comment": "A must-read for everyone." },
       { "rating": 4, "comment": "Powerful and thought-provoking." }
@@ -28,7 +28,7 @@
     "author": "George Orwell",
     "genre": "Dystopian",
     "price": 38,
-    "publicationDate": "1949-06-08",
+    "publicationDate": "2013-06-08",
     "reviews": [
       { "rating": 5, "comment": "A haunting and prophetic masterpiece." },
       { "rating": 4, "comment": "Thought-provoking and well-written." }
@@ -40,7 +40,7 @@
     "author": "Jane Austen",
     "genre": "Classic",
     "price": 32,
-    "publicationDate": "1813-01-28",
+    "publicationDate": "2014-01-28",
     "reviews": [
       { "rating": 5, "comment": "A delightful and timeless romance." },
       { "rating": 4, "comment": "Captivating characters and witty dialogue." }
@@ -51,7 +51,7 @@
     "title": "The Hobbit",
     "author": "J.R.R. Tolkien",
     "genre": "Fantasy",
-    "publicationDate": "1937-09-21",
+    "publicationDate": "2015-09-21",
     "reviews": [
       { "rating": 5, "comment": "An enchanting adventure in Middle-earth." },
       { "rating": 4, "comment": "Imaginative and beautifully crafted." }
@@ -61,9 +61,9 @@
   {
     "title": "Harry Potter and the Philosopher's Stone",
     "author": "J.K. Rowling",
-    "genre": "Fantasy",
+    "genre": "Science Fiction",
     "price": 46,
-    "publicationDate": "1997-06-26",
+    "publicationDate": "2016-06-26",
     "reviews": [
       { "rating": 5, "comment": "The start of an incredible magical journey." },
       { "rating": 4, "comment": "Spellbinding and full of wonder." }
@@ -75,17 +75,17 @@
     "author": "J.D. Salinger",
     "genre": "Coming-of-Age",
     "price": 34,
-    "publicationDate": "1951-07-16",
+    "publicationDate": "2017-07-16",
     "reviews": [
       { "rating": 4, "comment": "A classic portrayal of teenage angst." },
       { "rating": 3, "comment": "Provocative and introspective." }
     ],
-    "image": "https://example.com/book7.jpg"
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/To_Kill_a_Mockingbird_%28first_edition_cover%29.jpg/640px-To_Kill_a_Mockingbird_%28first_edition_cover%29.jpg"
   },
   {
     "title": "The Lord of the Rings",
     "author": "J.R.R. Tolkien",
-    "genre": "Fantasy",
+    "genre": "Mystery",
     "price": 40,
     "publicationDate": "1954-07-29",
     "reviews": [
@@ -99,7 +99,7 @@
     "author": "Paulo Coelho",
     "genre": "Fiction",
     "price": 30,
-    "publicationDate": "1988-04-25",
+    "publicationDate": "2018-04-25",
     "reviews": [
       { "rating": 4, "comment": "A spiritual journey full of wisdom." },
       { "rating": 3, "comment": "Thought-provoking and uplifting." }
@@ -109,9 +109,9 @@
   {
     "title": "Moby-Dick",
     "author": "Herman Melville",
-    "genre": "Classic",
+    "genre": "Poetry",
     "price": 48,
-    "publicationDate": "1851-10-18",
+    "publicationDate": "2019-10-18",
     "reviews": [
       { "rating": 4, "comment": "A literary masterpiece of the sea." },
       { "rating": 3, "comment": "Rich in symbolism and adventure." }
